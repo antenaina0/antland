@@ -1,0 +1,23 @@
+name: Build & Test
+run-name: 🚀 Building and testing the app by ${{ github.actor }}
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] # when pull request is opened, updated, or reopened
+
+env:
+  DENO_DIR: deno_cache_directory
+jobs:
+  Build-then-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    name: Build then test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x # Run with latest stable Deno.
+          cache: true
+      - run: deno install
+      - run: deno task build
+      - run: deno task test
